@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="content mt-8 mb-16">
+    <!-- 页面标题 -->
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">常见问题</h1>
+    </div>
+
+
+    <!-- 分隔线 -->
+    <div class="border-t border-gray-200 my-8"></div>
+
+    <!-- FAQ 列表 -->
+    <div class="max-w-4xl mx-auto space-y-8">
+        <!-- FAQ 1 -->
+        <div class="faq-item border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300">
+            <h3 class="text-xl font-semibold text-gray-900 mb-3 flex items-center">
+                <span class="text-[#7927F5] mr-3">Q1</span>
+                请求体和查询参数是什么？
+            </h3>
+            <p class="text-gray-600 leading-relaxed">
+                请求体是在 POST、PUT、PATCH 等请求中发送的数据，用于提交表单数据、JSON 数据等。<br>
+                查询参数是在 URL 中发送的键值对，用于过滤、排序等操作，get使用居多。<br>
+                例如：http://example.com/imgs?page=1&size=10 中，page=1 和 size=10 就是查询参数。
+
+                请求体也就是post传递的data数据，例如：{"username": "admin", "password": "123456"}
+            </p>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div class="faq-item border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300">
+            <h3 class="text-xl font-semibold text-gray-900 mb-3 flex items-center">
+                <span class="text-[#7927F5] mr-3">Q2</span>
+                如何使用API服务？
+            </h3>
+            <p class="text-gray-600 leading-relaxed">
+                例如站点为http://example.com，接口id为666，则完整url为：http://example.com/apis/666?token=你的token
+            </p>
+        </div>
+
+        <!-- FAQ 3 -->
+
+        <div class="faq-item border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300">
+    <h3 class="text-xl font-semibold text-gray-900 mb-3 flex items-center">
+        <span class="text-[#7927F5] mr-3">Q3</span>
+        每个状态码代表什么意思？
+    </h3>
+    <p class="text-gray-600 leading-relaxed">
+        400代表缺少必要参数
+    </p>
+    <p class="text-gray-600 leading-relaxed">
+        401代表参数错误
+    </p>
+    <p class="text-gray-600 leading-relaxed">
+        402代表点数不足
+    </p>
+    <p class="text-gray-600 leading-relaxed">
+        500代表接口内部错误
+    </p>
+</div>
+
+    </div>
+
+    <!-- 底部提示 -->
+    <div class="mt-16 text-center">
+        <p class="text-gray-500 mb-4">还有更多问题？</p>
+        <a href="{% url 'joinus' %}" 
+           class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-[#7927F5] to-[#9C4FFF] text-white rounded-full hover:opacity-90 transition-opacity duration-300 font-medium">
+            <span class="mr-2">💬</span> 加入交流群，与开发者一起讨论
+        </a>
+    </div>
+</div>
+
+<style>
+    /* 自定义动画效果 */
+    .faq-item {
+        transition: all 0.3s ease;
+    }
+    
+    .faq-item:hover {
+        border-color: #7927F5;
+        transform: translateY(-2px);
+    }
+    
+    /* 响应式调整 */
+    @media (max-width: 640px) {
+        .faq-item {
+            padding: 1rem;
+        }
+        
+        .faq-item h3 {
+            font-size: 1.125rem;
+        }
+    }
+</style>
+{% endblock %}

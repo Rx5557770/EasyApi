@@ -1,0 +1,66 @@
+{% extends 'auth/base.html' %}
+
+{% block title %}登录{% endblock %}
+{% block bodytitle %}登录{% endblock %}
+
+{% block formbody %}
+<!-- 登录表单 -->
+<form action="{% url 'auth:login' %}" method="post" class="formbody">
+    {% csrf_token %}
+
+{% if form.errors %}
+    <div class="bg-red-500 text-white p-4 rounded-md mb-4">
+    {% for field, errors in form.errors.items %}
+            {% for error in errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+    {% endfor %}
+    </div>
+{% endif %}
+
+    {% for field in form %}
+    <div class="mb-6">
+        <label for="{{ field.id_for_label }}" class="block text-gray-300 mb-2 text-sm font-medium">{{ field.label }}</label>
+        {{ field }}
+    </div>
+    {% endfor %}
+    {% comment %} <!-- 用户名输入框 -->
+    <div class="mb-6">
+        <label for="username" class="block text-gray-300 mb-2 text-sm font-medium">邮箱</label>
+        <input 
+            type="text" 
+            id="username" 
+            name="username" 
+            class="form-input w-full p-3 rounded-lg bg-[#252636] border border-gray-700 text-white focus:border-[#7927F5] transition-colors"
+            placeholder="请输入用户名"
+            required
+        >
+    </div> {% endcomment %}
+
+    {% comment %} <!-- 邮箱输入框 -->
+    <div class="mb-6">
+    <label for="{{form.email.id_for_label}}" class="block text-gray-300 mb-2 text-sm font-medium">邮箱</label>
+    {{ form.email }}
+    </div>
+    <!-- 密码输入框 -->
+    <div class="mb-8">
+        <label for="{{ form.password.id_for_label }}" class="block text-gray-300 mb-2 text-sm font-medium">密码</label>
+        {{ form.password }}
+    </div> {% endcomment %}
+    
+    <!-- 登录按钮 -->
+    <button 
+        type="submit" 
+        class="btn-auth w-full p-3 rounded-lg bg-[#7927F5] text-white font-bold text-lg"
+    >
+        登录
+    </button>
+    
+    <!-- 注册链接 -->
+    <div class="mt-6 text-center">
+        <a href="{% url 'auth:register' %}" class="text-gray-400 hover:text-[#7927F5] text-sm transition-colors">
+            还没有账号？立即注册
+        </a>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="mt-8">
+    <!-- 页面标题 -->
+    <h1 class="text-3xl font-bold text-gray-800 mb-2">API Hub</h1>
+    <p class="text-gray-600 mb-2">开放 API 共享平台，发现更多公开 API 项目</p>
+    <p class="text-red-600">例如站点为http://example.com，接口id为666，则完整url为：http://example.com/apis/666?token=你的token</p>
+
+    <p class="text-red-600">注册账号才有token信息</p>
+
+    <div class="flex flex-col lg:flex-row gap-8">
+        <!-- 左侧边栏 -->
+        <div class="lg:w-1/4 mt-4 md:mt-0">
+            <!-- 分类筛选 -->
+            <div class="bg-white rounded-lg border border-gray-200 p-6">
+                <h3 class="font-semibold text-lg text-gray-800 mb-4">项目分类</h3>
+                <ul class="space-y-3">
+                    <li>
+                        <a href="{% url 'apihub' %}" class="flex items-center justify-between text-gray-700 hover:text-[#7927F5] transition-colors">
+                            <span>全部分类</span>
+                        </a>
+                    </li>
+                    {% for project in data.project_list %}
+                    {% if project.is_show %}
+                    <li>
+                        <a href="{% url 'apihub_oneProject' project.id %}" class="flex items-center justify-between text-gray-700 hover:text-[#7927F5] transition-colors">
+                            <span>{{ project.name }}</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- 右侧内容区域 -->
+        <div class="lg:w-3/4">
+            <!-- 分隔线 -->
+            <div class="border-b border-gray-200 mb-6"></div>
+
+            <!-- API 表格 -->
+            {% if data.api_list %}
+            <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    接口ID
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    项目名
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    接口名
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    接口方法
+                                </th>
+
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    请求体/查询参数
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    响应体
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    接口介绍
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    点数
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for api in data.api_list %}
+                            {% if api.is_show %}
+
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-mono">
+                                    {{ api.id }}
+                                </td>
+                                <!-- 项目名 -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                        {{ api.project.name }}
+                                    </span>
+                                </td>
+                                
+                                <!-- 接口名 -->
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    {{ api.name }}
+                                </td>
+                                
+                                <!-- 接口方法 -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {% if api.method == "GET" %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        GET
+                                    </span>
+                                    {% elif api.method == "POST" %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                        POST
+                                    </span>
+                                    {% elif api.method == "PUT" %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                        PUT
+                                    </span>
+                                    {% elif api.method == "DELETE" %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                        DELETE
+                                    </span>
+                                    {% else %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                        {{ api.method }}
+                                    </span>
+                                    {% endif %}
+                                </td>
+                                
+                                <!-- 请求体/查询参数 -->
+                                <td class="px-6 py-4 text-sm text-gray-900">
+                                        <div class="max-w-xs overflow-hidden">
+                                            {% if api.req_data%}
+                                            {{api.req_data}}
+                                            {% else %}
+                                            无
+                                            {% endif %}
+                                        </div>
+                                </td>
+                                
+                                <!-- 响应体 -->
+                                <td class="px-6 py-4 text-sm text-gray-900">
+                                    <div class="max-w-xs overflow-hidden">
+                                        {% if api.res_data %}
+                                        {{api.res_data}}
+                                        {% else %}
+                                        无
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                
+                                <!-- 接口介绍 -->
+                                <td class="px-6 py-4 text-sm text-gray-900">
+                                    <div class="max-w-xs">
+                                        {{ api.description|truncatechars:60|default:"暂无介绍" }}
+                                    </div>
+                                </td>
+                                
+                                <!-- 点数 -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium {% if api.point > 0 %}bg-yellow-100 text-yellow-800{% else %}bg-green-100 text-green-800{% endif %}">
+                                        {% if api.point > 0 %}
+                                            {{ api.point }} 点
+                                        {% else %}
+                                            免费
+                                        {% endif %}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% else %}
+            <div class="bg-white rounded-lg border border-gray-200 p-8 text-center">
+                <p class="text-gray-600">暂无接口数据</p>
+            </div>
+            {% endif %}
+
+            <!-- 可选：表格底部信息 -->
+            <div class="mt-4 flex justify-between items-center text-sm text-gray-500">
+                <div>
+                    共 <span class="font-medium">{{ data.api_list|length }}</span> 个接口
+                </div>
+                <!-- 如果需要分页，可以在这里添加 -->
+                {% comment %}
+                <div class="flex items-center space-x-2">
+                    <span>每页显示</span>
+                    <select class="border border-gray-300 rounded px-2 py-1">
+                        <option>10</option>
+                        <option>25</option>
+                        <option>50</option>
+                    </select>
+                    <span>条</span>
+                </div>
+                {% endcomment %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 添加一些表格样式 -->
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    
+    th, td {
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    th {
+        font-weight: 600;
+        color: #4b5563;
+        background-color: #f9fafb;
+    }
+    
+    tr:last-child td {
+        border-bottom: none;
+    }
+    
+    /* 确保内容不会撑破表格 */
+    td div.max-w-xs {
+        max-width: 12rem;
+    }
+    
+    .font-mono {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    
+    @media (max-width: 768px) {
+        .overflow-x-auto {
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        td div.max-w-xs {
+            max-width: 8rem;
+        }
+    }
+</style>
+{% endblock %}
