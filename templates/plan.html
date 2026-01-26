@@ -46,7 +46,9 @@
 
     <!-- 价格卡片容器 - 缩小卡片间距 -->
     <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-        <!-- 免费套餐卡片 - 缩小内边距和字体 -->
+
+
+        <!-- 套餐卡片 - 缩小内边距和字体 -->
          {% for plan in plan_list %}
         <div class="price-card rounded-xl overflow-hidden shadow-lg border-0 gradient-bg">
             <div class="text-white p-5 md:p-6">
@@ -80,41 +82,10 @@
                 </div>
             </div>
         </div>
+        {% empty %}
+            暂无套餐
         {% endfor %}
-        <!-- 付费套餐卡片 - 缩小内边距和字体 -->
-        {% comment %} <div class="price-card rounded-xl overflow-hidden shadow-lg border border-gray-200">
-            <div class="bg-white p-5 md:p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl md:text-2xl font-bold text-gray-800">付费</h2>
-                    <span class="bg-gray-100 text-gray-800 px-2 py-0.5 rounded-full text-xs font-medium">全部可用</span>
-                </div>
-                <p class="text-gray-600 mb-5 text-sm">优质测试接口</p>
-                
-                <!-- 套餐权益 - 缩小间距和字体 -->
-                <ul class="space-y-2.5 mb-5">
-                    <li class="flex items-center text-sm">
-                        <svg class="w-4 h-4 mr-2 flex-shrink-0 text-[#7927F5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        <span class="text-gray-700">全部接口可用</span>
-                    </li>
-                    <li class="flex items-center text-sm">
-                        <svg class="w-4 h-4 mr-2 flex-shrink-0 text-[#7927F5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        <span class="text-gray-700">快速上手</span>
-                    </li>
-                </ul>
-                
-                <!-- 操作按钮 - 缩小按钮尺寸 -->
-                <a href="#" class="btn-purple block w-full bg-[#7927F5] text-white px-4 py-2 rounded-lg font-medium text-center hover:shadow-md text-sm">
-                    <svg class="w-4 h-4 inline-block mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
-                    </svg>
-                    立即咨询
-                </a>
-            </div>
-        </div> {% endcomment %}
+
     </div>
 
     <!-- 底部说明 - 缩小字体和间距 -->
