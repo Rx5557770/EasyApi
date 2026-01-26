@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG')
+DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -130,3 +130,10 @@ MEDIA_URL = '/media/'  # 访问媒体文件的 URL
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # 存储上传文件的位置
 
 LOGIN_URL = '/auth/login'
+
+
+ALLOWED_HOSTS = config(
+    'ALLOWED_HOSTS',
+    default='localhost,127.0.0.1',  # 开发环境默认值（可选）
+    cast=lambda v: [s.strip() for s in v.split(',')]  # 转换为列表
+)

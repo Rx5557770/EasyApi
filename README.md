@@ -54,7 +54,7 @@ api列表页：
 
 ```dotenv
 # Django 基础配置
-DEBUG=True
+DEBUG=False
 SECRET_KEY=your_django_secret_key_here
 
 # MySQL 数据库配置
@@ -64,6 +64,9 @@ DB_USER=your_db_username_here
 DB_PASSWORD=your_db_password_here
 DB_HOST=127.0.0.1
 DB_PORT=3306
+
+# 允许的域名和IP
+ALLOWED_HOSTS=127.0.0.1,localhost
 ```
 运行 `pip install -r requirements.txt` 安装依赖
 
