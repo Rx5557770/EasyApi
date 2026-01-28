@@ -55,7 +55,7 @@ api列表页：
 
 ```shell
 cd /home
-git pull https://github.com/Rx5557770/EasyApi.git
+git clone https://github.com/Rx5557770/EasyApi.git
 cd EasyApi
 ```
 
@@ -127,7 +127,7 @@ sudo systemctl enable docker
 拉取项目
 ```shell
 cd /home
-git pull https://github.com/Rx5557770/EasyApi.git
+git clone https://github.com/Rx5557770/EasyApi.git
 cd EasyApi
 ```
 
