@@ -35,7 +35,7 @@ api列表页：
 内置功能：EasyApi实现了用户登录、注册、后台管理(django后台)、套餐显示、项目与接口的创建、项目与接口的显示/隐藏，页面采用响应式布局。
 
 
-> `util/apis.py` 文件添加你的自定义脚本后在 `dashboard/views.py` 中找到 `runscript` 函数，在其内部根据接口id调用函数即可。
+> `util/apis.py` 文件添加你的自定义脚本
 
 每个函数都需要返回一个字典，字典中需要包含 `code:整数状态码` ，因为接口的函数有可能执行失败，失败后就不扣除用户的 `点数` 了（优化用户体验）。
 
@@ -49,10 +49,19 @@ api列表页：
     }
 ```
 
-### 帮助
+### 常规部署
+
+需要提前创建mysql数据库
+
+```shell
+cd /home
+git pull https://github.com/Rx5557770/EasyApi.git
+cd EasyApi
+```
+
 克隆本项目后，运行 `pip install -r requirements.txt` 安装依赖
 
-cd到项目目录下，运行 `python -c "import secrets; print(secrets.token_hex(32))"` 获取key。
+运行 `python -c "import secrets; print(secrets.token_hex(32))"` 获取key。
 
 在项目目录下编写 `.env` 文件 替换 `your_django_secret_key_here` 为刚刚复制的key。
 
@@ -63,20 +72,44 @@ SECRET_KEY=your_django_secret_key_here
 
 # MySQL 数据库配置
 ENGINE=django.db.backends.mysql
-DB_NAME=api_db
-DB_USER=your_db_username_here
-DB_PASSWORD=your_db_password_here
+MYSQL_DATABASE=api_db
+MYSQL_USER=root
+MYSQL_ROOT_PASSWORD=your_db_password_here
 DB_HOST=127.0.0.1
 DB_PORT=3306
 
 # 允许的域名和IP
 ALLOWED_HOSTS=127.0.0.1,localhost
+CSRF_TRUSTED_ORIGINS=http://127.0.0.1,http://localhost
 ```
 
 安装完成后运行 `python manage.py migrate` 执行迁移创建数据表。
-
 创建超级管理员 `python manage.py createsuperuser`
 
-最后 `python manage.py runserver` 访问 `/admin` 后台。
+显示页面到浏览器，需要配置nginx
+
+在nginx中（/etc/nginx/conf.d/）添加配置文件 easyapi.conf
+```nginx
+server {
+    listen 80; # 监听端口
+    server_name localhost 127.0.0.1; # 域名
+    
+    # url匹配然后走反向代理
+    location / {
+        proxy_pass http://localhost:8000;
+    }
+    
+    location /static/ {
+        alias /home/EasyApi/staticfiles/;
+    }
+}
+
+```
+
+
+
+运行服务器 `gunicorn config.wsgi:application --bind 0.0.0.0:8000`
+
+访问 `/admin` 后台。
 
 enjoy my first project!
