@@ -106,10 +106,70 @@ server {
 
 ```
 
-
-
 运行服务器 `gunicorn config.wsgi:application --bind 0.0.0.0:8000`
 
 访问 `/admin` 后台。
+
+### Docker + Docker-Compose
+
+> 保证环境是干净的，否则可能部署失败。此方法不需要手动创建mysql库
+
+```shell
+# 安装
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+
+# 设置开机自启
+sudo systemctl start docker
+sudo systemctl enable docker
+```
+
+拉取项目
+```shell
+cd /home
+git pull https://github.com/Rx5557770/EasyApi.git
+cd EasyApi
+```
+
+编写 `.env` 文件
+
+```dotenv
+# Django 基础配置
+DEBUG=False
+SECRET_KEY=your_django_secret_key_here
+
+# MySQL 数据库配置
+ENGINE=django.db.backends.mysql
+MYSQL_DATABASE=api_db
+MYSQL_USER=root
+MYSQL_ROOT_PASSWORD=your_db_password_here
+DB_HOST=127.0.0.1
+DB_PORT=3306
+
+# 允许的域名和IP
+ALLOWED_HOSTS=127.0.0.1,localhost
+CSRF_TRUSTED_ORIGINS=http://127.0.0.1,http://localhost
+```
+
+运行 `docker-compose up -d`
+
+然后配置nginx，在 `/etc/nginx/conf.d` 中添加 `EasyApi.conf`
+
+```nginx
+server {
+    listen 80; # 监听端口
+    server_name localhost 127.0.0.1; # 域名
+    
+    # url匹配然后走反向代理
+    location / {
+        proxy_pass http://easyapi:8000;
+    }
+    
+    location /static/ {
+        alias /usr/share/nginx/staticfiles;
+    }
+}
+
+```
 
 enjoy my first project!

@@ -36,12 +36,13 @@ services:
     volumes:
       - /etc/nginx/conf.d:/etc/nginx/conf.d
       - /var/www/html:/usr/share/nginx/html
+      - /home/EasyApi/staticfiles:/usr/share/nginx/staticfiles # 将站点的静态文件挂载到nginx容器中
     restart: always
     networks:
       - easyapi-network
 
 
-  app:
+  easyapi:
     # 从当前目录下找到Dockerfile并构建镜像
     build: .
     # 仅支持docker内通信，不暴露端口给主机（如果用Nginx反向代理，建议注释掉下面的ports）
