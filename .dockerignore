@@ -1,0 +1,11 @@
+.venv
+media
+public
+static
+.env
+.gitignore
+.idea
+.python-version
+pyproject.toml
+uv.lock
+docker-compose.yaml

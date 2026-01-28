@@ -96,20 +96,10 @@ def todo(request, api_id):
 
 
     # 执行脚本逻辑
-    res = runscript(api.id)
+    res = apis.runfunc(api.id)
 
     if res.get('code') == 200:
         user.save()
     else:
         return HttpResponse('接口调试失败，不扣取点数', status=500)
     return JsonResponse(res)
-
-
-def runscript(api_id):
-    # 根据id运行脚本
-    if api_id == 1:
-        res = apis.dosomething()
-
-    if api_id == 2:
-        res = apis.dosomething2()
-    return res

@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-import os
+import secrets
+from email.policy import default
 from pathlib import Path
 from decouple import config
 
@@ -21,12 +22,57 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+DEBUG = config('DEBUG', default=True, cast=bool)
+
+
+ALLOWED_HOSTS = config(
+    'ALLOWED_HOSTS',
+    default='*',  # 开发环境默认值（可选）
+    cast=lambda v: [s.strip() for s in v.split(',')]  # 转换为列表
+)
+
+if DEBUG:
+    # 开发环境
+    SECRET_KEY = config('SECRET_KEY', default=secrets.token_hex(32))
+    # 配置低风险的安全值，消除 check --deploy 警告
+    SECURE_HSTS_SECONDS = 86400  # 仅1天有效期（开发环境风险极低）
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+    SECURE_HSTS_PRELOAD = False
+
+    # 以下配置设为 False（本地无 HTTPS，设为 True 会导致访问异常）
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+
+    # 关键：告诉 Django 开发环境忽略 SSL 相关警告（核心配置）
+    SILENCED_SYSTEM_CHECKS = [
+        'security.W008',  # 忽略 SECURE_SSL_REDIRECT 警告
+        'security.W012',  # 忽略 SESSION_COOKIE_SECURE 警告
+        'security.W016',  # 忽略 CSRF_COOKIE_SECURE 警告
+        # 可选：也可以忽略 W004（HSTS），但保留也无妨
+        # 'security.W004',
+    ]
+else:
+    # 生产环境
+    SECRET_KEY = config('SECRET_KEY', default=secrets.token_hex(32))
+    # 基础安全
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
+    # HSTS 设置
+    SECURE_HSTS_SECONDS = 31536000  # 1年
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+
+    # 其他安全头
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = 'DENY'
+
 
 
 # Application definition
@@ -79,9 +125,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': config('ENGINE'),
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
+        'NAME': config('MYSQL_DATABASE'),
+        'USER': config('DB_USER', 'root'),
+        'PASSWORD': config('MYSQL_ROOT_PASSWORD'),
         'HOST': config('DB_HOST'),
         'PORT': config('DB_PORT'),
     }
@@ -119,22 +165,14 @@ USE_I18N = True
 
 USE_TZ = True
 
+LOGIN_URL = '/auth/login'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = 'static/' # 访问静态文件URL
 STATICFILES_DIRS = [BASE_DIR / "static"] # 开发时查找静态文件的目录列表
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-MEDIA_URL = '/media/'  # 访问媒体文件的 URL
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # 存储上传文件的位置
-
-LOGIN_URL = '/auth/login'
-
-
-ALLOWED_HOSTS = config(
-    'ALLOWED_HOSTS',
-    default='localhost,127.0.0.1',  # 开发环境默认值（可选）
-    cast=lambda v: [s.strip() for s in v.split(',')]  # 转换为列表
-)
+MEDIA_URL = 'media/'  # 访问媒体文件的URL
+MEDIA_ROOT = BASE_DIR / 'media'  # 存储上传文件的位置

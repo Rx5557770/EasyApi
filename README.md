@@ -52,14 +52,14 @@ api列表页：
 ### 帮助
 克隆本项目后，运行 `pip install -r requirements.txt` 安装依赖
 
-cd到项目目录下，运行 `python manage.py shell -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"` 获取key。
+cd到项目目录下，运行 `python -c "import secrets; print(secrets.token_hex(32))"` 获取key。
 
 在项目目录下编写 `.env` 文件 替换 `your_django_secret_key_here` 为刚刚复制的key。
 
 ```dotenv
 # Django 基础配置
 DEBUG=False
-SECRET_KEY=django-insecure-your_django_secret_key_here
+SECRET_KEY=your_django_secret_key_here
 
 # MySQL 数据库配置
 ENGINE=django.db.backends.mysql
