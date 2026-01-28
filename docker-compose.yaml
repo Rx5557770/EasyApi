@@ -27,6 +27,10 @@ services:
       start_period: 10s
     networks:
       - easyapi-network
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+
 
   nginx:
     image: nginx
@@ -40,7 +44,9 @@ services:
     restart: always
     networks:
       - easyapi-network
-
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
 
   easyapi:
     # 从当前目录下找到Dockerfile并构建镜像
@@ -72,6 +78,10 @@ services:
     # env文件
     # env_file:
     #   - .env
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+
 
 # 定义网络（让服务之间可以互相访问）
 networks:
