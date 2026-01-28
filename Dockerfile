@@ -10,6 +10,8 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # 定义默认端口
 ENV PORT=8080
 
+# 设置清华源
+RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 # 升级pip
 RUN pip install --upgrade pip
 
