@@ -1,6 +1,7 @@
 # 定义所有服务（容器）
 services:
   db:
+    container_name: db-easyapi
     image: mysql:8.0
     expose:
       - "3306"
@@ -12,6 +13,7 @@ services:
       - MYSQL_COLLATION_SERVER=utf8mb4_unicode_ci
     volumes:
       - ./mysql-data:/var/lib/mysql  # 挂载（持久化 MySQL 数据）
+      - ./backup:/opt/backup
     # 默认读取当前目录下的.env文件
     # env_file:
     #   - .env
@@ -45,6 +47,7 @@ services:
 
 
   app:
+    container_name: app-easyapi
     # 从当前目录下找到Dockerfile并构建镜像
     build: .
     # 仅支持docker内通信，不暴露端口给主机（如果用Nginx反向代理，建议注释掉下面的ports）

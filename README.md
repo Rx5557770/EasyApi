@@ -35,7 +35,7 @@ api列表页：
 内置功能：EasyApi实现了用户登录、注册、后台管理(django后台)、套餐显示、项目与接口的创建、项目与接口的显示/隐藏，页面采用响应式布局。
 
 
-> `util/apis.py` 文件添加你的自定义脚本
+> `util/apis.py` 文件添加你的自定义脚本 每个脚本需要对接接口id
 
 每个函数都需要返回一个字典，字典中需要包含 `code:整数状态码` ，因为接口的函数有可能执行失败，失败后就不扣除用户的 `点数` 了（优化用户体验）。
 
@@ -45,7 +45,7 @@ api列表页：
     return data = {
         'code': 200,
         'data':'abcd',
-        'info':'调试成功'
+        'msg':'调试成功'
     }
 ```
 
@@ -177,7 +177,7 @@ server {
 
 访问 `/admin` 后台。
 
-### Docker + Docker-Compose
+### Docker-Compose
 
 > 保证环境是干净的，否则可能部署失败。此方法不需要手动创建mysql库
 
@@ -189,6 +189,9 @@ sudo sh get-docker.sh
 # 设置开机自启
 sudo systemctl start docker
 sudo systemctl enable docker
+
+#安装docker-compose
+sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && sudo chmod +x /usr/local/bin/docker-compose
 ```
 
 拉取项目
@@ -222,7 +225,7 @@ ALLOWED_HOSTS=localhost,127.0.0.1
 CSRF_TRUSTED_ORIGINS=http://localhost,http://127.0.0.1
 ```
 
-#### 安装cerbot并获取ssl证书
+##### 配置ssl证书
 ```shell
 sudo apt update
 sudo apt install snapd -y
@@ -315,6 +318,28 @@ server {
 }
 ```
 
-最后运行 `docker-compose up -d` 启动所有服务。
+运行 `docker-compose up -d` 启动所有服务。
+
+运行 `docker exec -it app-easyapi bash` 进入容器后运行 `python manage.py createsuperuser` 创建管理员。
+
+后台在网页/admin
+
+### 数据的导出
+
+```shell
+# 进入容器
+docker exec db-easyapi mysqldump -u root -p'密码' --default-character-set=utf8mb4 数据库名 > /opt/backup/easyapi.sql
+
+# 宿主机复制导出的sql
+docker cp db-easyapi:/opt/backup/easyapi.sql /home/EasyApi/backup/easyapi.sql
+```
+
+### 数据的恢复
+```shell
+docker exec -it db-easyapi bash
+# 容器内执行恢复（进入容器后执行，输密码即可）
+mysql -u root -p 数据库名 < /opt/backup/easyapi.sql
+```
+
 
 enjoy my first project!
