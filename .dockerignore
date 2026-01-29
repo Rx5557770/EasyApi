@@ -1,5 +1,4 @@
 .venv
-media
 public
 static
 .env
@@ -9,3 +8,5 @@ static
 pyproject.toml
 uv.lock
 docker-compose.yaml
+mysql-data
+nginx.conf

@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 import secrets
-from email.policy import default
 from pathlib import Path
 from decouple import config
 
@@ -26,53 +25,53 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: don't run with debug turned on in production!
 
 DEBUG = config('DEBUG', default=True, cast=bool)
-
+SECRET_KEY = config('SECRET_KEY', default=secrets.token_hex(32))
 
 ALLOWED_HOSTS = config(
     'ALLOWED_HOSTS',
-    default='*',  # 开发环境默认值（可选）
+    default='',  # 开发环境默认值
     cast=lambda v: [s.strip() for s in v.split(',')]  # 转换为列表
 )
+# ========== 补充IPv6支持 ==========
+ALLOWED_HOSTS += ['[::1]']
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='',
+                              cast=lambda v: [s.strip() for s in v.split(',')])
+
+# ========== 基础安全配置（所有环境通用） ==========
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'SAMEORIGIN' if DEBUG else 'DENY'
+USE_X_FORWARDED_HOST = not DEBUG  # 生产环境用Nginx的Host头
+USE_X_FORWARDED_PORT = not DEBUG  # 让Django解析Nginx的443端口
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # 全局配置，HTTPS固定值
+
 
 if DEBUG:
-    # 开发环境
-    SECRET_KEY = config('SECRET_KEY', default=secrets.token_hex(32))
-    # 配置低风险的安全值，消除 check --deploy 警告
-    SECURE_HSTS_SECONDS = 86400  # 仅1天有效期（开发环境风险极低）
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
-    SECURE_HSTS_PRELOAD = False
-
-    # 以下配置设为 False（本地无 HTTPS，设为 True 会导致访问异常）
+    # 开发环境：禁用所有HTTPS相关安全检查，消除警告
     SECURE_SSL_REDIRECT = False
     SESSION_COOKIE_SECURE = False
     CSRF_COOKIE_SECURE = False
+    SECURE_HSTS_SECONDS = 0  # 完全禁用HSTS
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+    SECURE_HSTS_PRELOAD = False
 
-    # 关键：告诉 Django 开发环境忽略 SSL 相关警告（核心配置）
+    # 静默HTTPS相关警告
     SILENCED_SYSTEM_CHECKS = [
-        'security.W008',  # 忽略 SECURE_SSL_REDIRECT 警告
-        'security.W012',  # 忽略 SESSION_COOKIE_SECURE 警告
-        'security.W016',  # 忽略 CSRF_COOKIE_SECURE 警告
-        # 可选：也可以忽略 W004（HSTS），但保留也无妨
-        # 'security.W004',
+        'security.W004',  # HSTS
+        'security.W008',  # SSL重定向
+        'security.W012',  # Session Cookie安全
+        'security.W016',  # CSRF Cookie安全
     ]
+
 else:
-    # 生产环境
-    SECRET_KEY = config('SECRET_KEY', default=secrets.token_hex(32))
-    # 基础安全
-    SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-
-    # HSTS 设置
-    SECURE_HSTS_SECONDS = 31536000  # 1年
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-
-    # 其他安全头
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    X_FRAME_OPTIONS = 'DENY'
-
+    # 生产环境：HTTPS强制开启（.env中SECURE_SSL_REDIRECT=True）
+    SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=False, cast=bool)
+    # 开启HTTPS相关安全配置（因.env中为True，以下配置必生效）
+    SESSION_COOKIE_SECURE = True  # Session Cookie仅在HTTPS下传输
+    CSRF_COOKIE_SECURE = True    # CSRF Cookie仅在HTTPS下传输
+    SECURE_HSTS_SECONDS = 31536000  # HSTS有效期1年
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # 包含子域名
+    SECURE_HSTS_PRELOAD = True  # 加入浏览器HSTS预加载列表
 
 
 # Application definition
@@ -126,7 +125,7 @@ DATABASES = {
     'default': {
         'ENGINE': config('ENGINE'),
         'NAME': config('MYSQL_DATABASE'),
-        'USER': config('DB_USER', 'root'),
+        'USER': config('MYSQL_USER', 'root'),
         'PASSWORD': config('MYSQL_ROOT_PASSWORD'),
         'HOST': config('DB_HOST'),
         'PORT': config('DB_PORT'),

@@ -7,11 +7,7 @@ WORKDIR /app
 ENV PYTHONUNBUFFERED=1
 # 不生成 .pyc 文件，减小镜像体积
 ENV PYTHONDONTWRITEBYTECODE=1
-# 定义默认端口
-ENV PORT=8080
 
-# 设置源
-RUN pip config set global.index-url https://mirrors.aliyun.com/pypi/simple/
 
 # 系统依赖安装后，再复制项目依赖清单
 COPY requirements.txt /app
@@ -21,9 +17,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # 依赖安装后，复制本地代码到容器内
 COPY . .
-
-# 执行迁移
-RUN python manage.py migrate
 
 # 声明对外暴露端口
 EXPOSE 8000

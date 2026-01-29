@@ -1,5 +1,3 @@
-version: '3.8'  # Compose 文件版本（推荐使用 3.x 系列，兼容大部分 Docker 版本）
-
 # 定义所有服务（容器）
 services:
   db:
@@ -27,9 +25,6 @@ services:
       start_period: 10s
     networks:
       - easyapi-network
-    dns:
-      - 8.8.8.8
-      - 8.8.4.4
 
 
   nginx:
@@ -37,18 +32,19 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    # 容器名
+    container_name: nginx-django
     volumes:
       - /etc/nginx/conf.d:/etc/nginx/conf.d
       - /var/www/html:/usr/share/nginx/html
       - /home/EasyApi/staticfiles:/usr/share/nginx/staticfiles # 将站点的静态文件挂载到nginx容器中
+      - /etc/letsencrypt:/etc/letsencrypt/ # 证书路径，后续通过 Certbot 添加证书
     restart: always
     networks:
       - easyapi-network
-    dns:
-      - 8.8.8.8
-      - 8.8.4.4
 
-  easyapi:
+
+  app:
     # 从当前目录下找到Dockerfile并构建镜像
     build: .
     # 仅支持docker内通信，不暴露端口给主机（如果用Nginx反向代理，建议注释掉下面的ports）
@@ -59,12 +55,11 @@ services:
 #      - "8000:8000"
     # 文件映射
     volumes:
-      - ./util:/app/util
-      - ./templates:/app/templates
-      - ./static:/app/static
+      - .:/app
     # 在容器启动时执行(优先级大于Dockerfile)
-    # command:
-    #   - gunicorn config.wsgi:application --bind 0.0.0.0:8000
+    command: >
+      sh -c "python manage.py migrate && 
+             gunicorn config.wsgi --bind 0.0.0.0:8000"
     # 异常重启
     restart: always
     # 自定义网络
@@ -75,12 +70,14 @@ services:
       db:
         # 健康检查后才启动app
         condition: service_healthy
+
+#    dns:
+#      - "2001:4860:4860::8888"  # Google IPv6 DNS
+#      - "2001:4860:4860::8844"
+#      - "8.8.8.8"  # IPv4 DNS 作为备选
     # env文件
-    # env_file:
-    #   - .env
-    dns:
-      - 8.8.8.8
-      - 8.8.4.4
+    env_file:
+      - .env
 
 
 # 定义网络（让服务之间可以互相访问）
