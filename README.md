@@ -70,6 +70,9 @@ cd EasyApi
 DEBUG=False
 SECRET_KEY=your_django_secret_key_here
 
+# 网站名称
+WEBSITE_TITLE=EasyApi
+
 # MySQL 数据库配置
 ENGINE=django.db.backends.mysql
 MYSQL_DATABASE=easyapi_db
@@ -207,6 +210,9 @@ cd EasyApi
 # Django 基础配置
 DEBUG=False
 SECRET_KEY=your_django_secret_key_here
+
+# 网站名称
+WEBSITE_TITLE=EasyApi
 
 # MySQL 数据库配置
 ENGINE=django.db.backends.mysql

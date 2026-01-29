@@ -1,11 +1,12 @@
 {% load static %}
+{% load env %}
 <!DOCTYPE html>
 <html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EasyApi</title>
+    <title>{% get_env "WEBSITE_TITLE" %}</title>
     <script src="{% static 'js/tailwindcss-3.4.17.js' %}"></script>
     <style>
         /* 隐藏 checkbox */
@@ -206,7 +207,7 @@
         <div class="header flex my-2 justify-between md:justify-between relative md:items-center">
             <!-- 头部左侧 -->
             <div class="hd_left basis-1/6 md:basis-auto">
-                <a href="#" class="text-xl font-bold text-[#7927F5]">EasyApi</a>
+                <a href="#" class="text-xl font-bold text-[#7927F5]">{% get_env "WEBSITE_TITLE" %}</a>
             </div>
 
             <!-- 手机菜单按钮 -->
