@@ -88,7 +88,9 @@ CSRF_TRUSTED_ORIGINS=http://localhost,http://127.0.0.1
 ```
 
 完成后运行 `python manage.py migrate` 执行迁移创建数据表。
+
 创建超级管理员 `python manage.py createsuperuser`
+
 运行服务器 `gunicorn config.wsgi:application --bind 0.0.0.0:8000`
 
 ssl的申请在后面docker那里是一样的，懒得写了，直接往下翻一样的。（必须先申请ssl证书然后再添加nginx配置）
