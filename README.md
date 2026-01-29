@@ -326,12 +326,13 @@ server {
 
 ### 数据的导出
 
-```shell
-# 进入容器
-docker exec db-easyapi mysqldump -u root -p'密码' --default-character-set=utf8mb4 数据库名 > /opt/backup/easyapi.sql
+数据库文件保存到当前项目的 `backup` 文件夹下。
 
-# 宿主机复制导出的sql
-docker cp db-easyapi:/opt/backup/easyapi.sql /home/EasyApi/backup/easyapi.sql
+```shell
+docker exec db-easyapi mysqldump -u root -p'密码' --default-character-set=utf8mb4 数据库名 > ./backup/easyapi.sql
+
+# 或者 执行后会提示输入密码，输入时不会显示
+docker exec -it db-easyapi mysqldump -u root -p --default-character-set=utf8mb4 数据库名 > ./backup/easyapi.sql
 ```
 
 ### 数据的恢复
