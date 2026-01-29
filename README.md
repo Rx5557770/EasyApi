@@ -326,7 +326,7 @@ server {
 
 ### 数据的导出
 
-数据库文件保存到当前项目的 `backup` 文件夹下。
+数据库文件导出后会保存到当前项目的 `backup` 文件夹下。
 
 ```shell
 docker exec db-easyapi mysqldump -u root -p'密码' --default-character-set=utf8mb4 数据库名 > ./backup/easyapi.sql
@@ -336,6 +336,9 @@ docker exec -it db-easyapi mysqldump -u root -p --default-character-set=utf8mb4 
 ```
 
 ### 数据的恢复
+
+当backup目录下有sql文件的时候，在db容器/opt/backup/会同步，直接运行以下命令恢复。
+
 ```shell
 docker exec -it db-easyapi bash
 # 容器内执行恢复（进入容器后执行，输密码即可）

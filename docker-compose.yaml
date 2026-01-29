@@ -13,7 +13,7 @@ services:
       - MYSQL_COLLATION_SERVER=utf8mb4_unicode_ci
     volumes:
       - ./mysql-data:/var/lib/mysql  # 挂载（持久化 MySQL 数据）
-      - ./backup:/opt/backup
+      - ./backup:/opt/backup # 导出的sql文件
     # 默认读取当前目录下的.env文件
     # env_file:
     #   - .env
@@ -37,9 +37,9 @@ services:
     # 容器名
     container_name: nginx-django
     volumes:
-      - /etc/nginx/conf.d:/etc/nginx/conf.d
-      - /var/www/html:/usr/share/nginx/html
-      - /home/EasyApi/staticfiles:/usr/share/nginx/staticfiles # 将站点的静态文件挂载到nginx容器中
+      - /etc/nginx/conf.d:/etc/nginx/conf.d # nginx配置文件
+      - /var/www/html:/usr/share/nginx/html # 网页文件
+      - /home/EasyApi/staticfiles:/usr/share/nginx/staticfiles # 将django站点的静态文件挂载到nginx容器中
       - /etc/letsencrypt:/etc/letsencrypt/ # 证书路径，后续通过 Certbot 添加证书
     restart: always
     networks:
