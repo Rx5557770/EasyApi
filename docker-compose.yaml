@@ -57,8 +57,10 @@ services:
 #    ports:
 #      - "8000:8000"
     # 文件映射
-#    volumes:
-#      - .:/app
+    volumes:
+      - ./.env:/app/.env
+      - ./util:/app/util
+      - ./templates:/app/templates
     # 在容器启动时执行(优先级大于Dockerfile)
     command: >
       sh -c "python manage.py migrate && 

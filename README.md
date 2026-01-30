@@ -180,7 +180,7 @@ server {
 
 访问 `/admin` 后台。
 
-### Docker-Compose
+### Docker-Compose部署
 
 > 保证环境是干净的，否则可能部署失败。此方法不需要手动创建mysql库
 
