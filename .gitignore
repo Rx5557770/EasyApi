@@ -8,7 +8,6 @@ wheels/
 .venv
 .idea
 media
-public
 static
 .python-version
 pyproject.toml
