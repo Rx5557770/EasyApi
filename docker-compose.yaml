@@ -39,6 +39,7 @@ services:
     volumes:
       - /etc/nginx/conf.d:/etc/nginx/conf.d # nginx配置文件
       - /var/www/html:/usr/share/nginx/html # 网页文件
+      - /var/log/nginx:/var/log/nginx # 日志
       - ./staticfiles:/usr/share/nginx/staticfiles # 将django站点的静态文件挂载到nginx容器中
       - /etc/letsencrypt:/etc/letsencrypt/ # 证书路径，后续通过 Certbot 添加证书
     restart: always

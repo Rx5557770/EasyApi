@@ -154,14 +154,14 @@ server {
 
     # 安全头：与Django配置一致
     add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
-    add_header X-Frame-Options DENY always;
+    add_header X-Frame-Options SAMEORIGIN always;
     add_header X-Content-Type-Options nosniff always;
     add_header X-XSS-Protection "1; mode=block" always;
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 
     # 主请求反向代理：Django核心配置
     location / {
-        proxy_pass http://127.0.0.1:8000;
+        proxy_pass http://app:8000;
         proxy_redirect off;
         proxy_http_version 1.1;  # 启用HTTP/1.1，优化长连接
         proxy_set_header Connection "";  # 配合HTTP/1.1，清除连接头
@@ -250,7 +250,7 @@ ENGINE=django.db.backends.mysql
 MYSQL_USER=root
 MYSQL_ROOT_PASSWORD=<MYSQL_ROOT_PASSWORD>
 MYSQL_DATABASE=<MYSQL_DATABASE>
-DB_HOST=127.0.0.1
+DB_HOST=db
 DB_PORT=3306
 
 
@@ -320,7 +320,7 @@ server {
 
     # 安全头：与Django配置一致
     add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
-    add_header X-Frame-Options DENY always;
+    add_header X-Frame-Options SAMEORIGIN always;
     add_header X-Content-Type-Options nosniff always;
     add_header X-XSS-Protection "1; mode=block" always;
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
@@ -369,6 +369,11 @@ server {
 运行 `docker exec -it app-easyapi bash` 进入容器后运行 `python manage.py createsuperuser` 创建管理员。
 
 后台在网页/admin
+
+
+### 后台管理
+
+如果是管理员，那么必须先手动到后台用户模块将自己的账号进行添加，否则访问仪表盘会导致500响应。
 
 ### 数据的导出
 
