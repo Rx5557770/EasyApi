@@ -1,0 +1,44 @@
+{% extends 'auth/base.html' %}
+
+{% block title %}注册{% endblock %}
+{% block bodytitle %}注册{% endblock %}
+
+
+{% block formbody %}
+<!-- 注册表单 -->
+<form action="{% url 'auth:register' %}" method="post" class="formbody" onsubmit="return validateForm()">
+    {% csrf_token %}
+
+{% if form.errors %}
+    <div class="bg-red-500 text-white p-4 rounded-md mb-4">
+    {% for field, errors in form.errors.items %}
+            {% for error in errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+    {% endfor %}
+    </div>
+{% endif %}
+
+    {% for field in form %}
+    <div class="mb-4">
+        <label for="{{ field.id_for_label }}" class="block text-gray-300 mb-2 text-sm font-medium">{{ field.label }}</label>
+        {{ field }}
+    </div>
+    {% endfor %}
+
+    <!-- 注册按钮 -->
+    <button 
+        type="submit" 
+        class="btn-auth w-full p-3 rounded-lg bg-[#7927F5] text-white font-bold text-lg"
+    >
+        注册
+    </button>
+    
+    <!-- 登录链接 -->
+    <div class="mt-6 text-center">
+        <a href="{% url 'auth:login' %}" class="text-gray-400 hover:text-[#7927F5] text-sm transition-colors">
+            已有账号？立即登录
+        </a>
+    </div>
+</form>
+{% endblock %}

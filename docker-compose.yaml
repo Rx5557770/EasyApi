@@ -1,0 +1,93 @@
+# 定义所有服务（容器）
+services:
+  db:
+    container_name: db-easyapi
+    image: mysql:8.0
+    expose:
+      - "3306"
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      # 可选：设置字符集和排序规则（解决中文乱码问题）
+      - MYSQL_CHARACTER_SET_SERVER=utf8mb4
+      - MYSQL_COLLATION_SERVER=utf8mb4_unicode_ci
+    volumes:
+      - ./mysql-data:/var/lib/mysql  # 挂载（持久化 MySQL 数据）
+      - ./backup:/opt/backup # 导出的sql文件
+    # 默认读取当前目录下的.env文件
+    # env_file:
+    #   - .env
+    restart: always
+    # 健康检查 确保后续的 Django 服务不会因 MySQL 未就绪而失败。
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - easyapi-network
+
+
+  nginx:
+    image: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    # 容器名
+    container_name: nginx-django
+    volumes:
+      - /etc/nginx/conf.d:/etc/nginx/conf.d # nginx配置文件
+      - /var/www/html:/usr/share/nginx/html # 网页文件
+      - ./staticfiles:/usr/share/nginx/staticfiles # 将django站点的静态文件挂载到nginx容器中
+      - /etc/letsencrypt:/etc/letsencrypt/ # 证书路径，后续通过 Certbot 添加证书
+    restart: always
+    networks:
+      - easyapi-network
+
+
+  app:
+    container_name: app-easyapi
+    # 从当前目录下找到Dockerfile并构建镜像
+    build: .
+    # 仅支持docker内通信，不暴露端口给主机（如果用Nginx反向代理，建议注释掉下面的ports）
+    expose:
+      - "8000"
+    # 映射外部 暴露端口
+#    ports:
+#      - "8000:8000"
+    # 文件映射
+    volumes:
+      - .:/app
+    # 在容器启动时执行(优先级大于Dockerfile)
+    command: >
+      sh -c "python manage.py migrate && 
+             gunicorn config.wsgi --bind 0.0.0.0:8000"
+    # 异常重启
+    restart: always
+    # 自定义网络
+    networks:
+      - easyapi-network
+    # 依赖项
+    depends_on:
+      db:
+        # 健康检查后才启动app
+        condition: service_healthy
+
+#    dns:
+#      - "2001:4860:4860::8888"  # Google IPv6 DNS
+#      - "2001:4860:4860::8844"
+#      - "8.8.8.8"  # IPv4 DNS 作为备选
+    # env文件
+#    env_file:
+#      - .env
+
+
+# 定义网络（让服务之间可以互相访问）
+networks:
+  easyapi-network:
+    driver: bridge
+
+# 定义数据卷
+#volumes:
+#  mysql-data:

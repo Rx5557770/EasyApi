@@ -1,0 +1,206 @@
+{% extends "view/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="mt-6 md:mt-8 px-4 sm:px-0">
+    <!-- 页面标题 - 响应式字号/间距 -->
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">API Hub</h1>
+    <p class="text-gray-600 mb-6 md:mb-8">开放 API 共享平台，发现更多公开 API 项目</p>
+
+    <div class="flex flex-col lg:flex-row gap-6 lg:gap-8">
+        <!-- 左侧边栏 - 优化响应式、阴影、悬浮、选中态 -->
+        <div class="lg:w-1/5 w-full shrink-0"> <!-- 小屏占满，大屏收窄为1/5更协调 -->
+            <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5 sticky top-8"> <!-- 粘性导航+轻阴影 -->
+                <h3 class="font-semibold text-lg text-gray-800 mb-4 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-[#7927F5]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                    </svg>
+                    项目分类
+                </h3>
+                <ul class="space-y-1"> <!-- 缩小间距更紧凑 -->
+                    <li>
+                        <a href="{% url 'apihub' %}" class="flex items-center w-full px-3 py-2 rounded-lg text-gray-700 hover:bg-purple-50 hover:text-[#7927F5] transition-all duration-200">
+                            全部分类
+                        </a>
+                    </li>
+                    {% for project in data.project_list %}
+                    {% if project.is_show %}
+                    <li>
+                        <a href="{% url 'apihub_oneProject' project.id %}" class="flex items-center w-full px-3 py-2 rounded-lg text-gray-700 hover:bg-purple-50 hover:text-[#7927F5] transition-all duration-200">
+                            {{ project.name }}
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- 右侧内容区域 -->
+        <div class="lg:w-4/5 w-full">
+            <!-- 分隔线 - 优化样式 -->
+            <div class="border-b border-gray-100 mb-6"></div>
+
+            <!-- API 表格 - 深度美化+响应式适配 -->
+            {% if data.api_list %}
+            <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-100">
+                        <thead class="bg-gray-50/80 backdrop-blur-sm"> <!-- 浅灰背景+轻微毛玻璃 -->
+                            <tr>
+                                <th scope="col" class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">接口ID</th>
+                                <th scope="col" class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">项目名</th>
+                                <th scope="col" class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">接口名</th>
+                                <th scope="col" class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">请求方法</th>
+                                <th scope="col" class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">请求参数</th>
+                                <th scope="col" class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">响应体</th>
+                                <th scope="col" class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">接口介绍</th>
+                                <th scope="col" class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">消耗点数</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-100">
+                            {% for api in data.api_list %}
+                            {% if api.is_show %}
+                            <tr class="hover:bg-gray-50/70 transition-colors duration-200">
+                                <!-- 接口ID - 优化内边距+配色 -->
+                                <td class="px-4 sm:px-6 py-3 whitespace-nowrap text-sm text-gray-700 font-mono bg-gray-50/50 rounded">
+                                    {{ api.id }}
+                                </td>
+                                <!-- 项目名 - 优化徽章样式 -->
+                                <td class="px-4 sm:px-6 py-3 whitespace-nowrap">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-purple-50 text-[#7927F5] border border-purple-100">
+                                        {{ api.project.name }}
+                                    </span>
+                                </td>
+                                <!-- 接口名 - 加粗+配色 -->
+                                <td class="px-4 sm:px-6 py-3 whitespace-nowrap text-sm font-semibold text-gray-800">
+                                    {{ api.name }}
+                                </td>
+                                <!-- 接口方法 - 优化徽章配色+间距 -->
+                                <td class="px-4 sm:px-6 py-3 whitespace-nowrap">
+                                    {% if api.method == "GET" %}
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">GET</span>
+                                    {% elif api.method == "POST" %}
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-sky-50 text-sky-700 border border-sky-100">POST</span>
+                                    {% elif api.method == "PUT" %}
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-100">PUT</span>
+                                    {% elif api.method == "DELETE" %}
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-rose-50 text-rose-700 border border-rose-100">DELETE</span>
+                                    {% else %}
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-50 text-gray-700 border border-gray-100">{{ api.method }}</span>
+                                    {% endif %}
+                                </td>
+                                <!-- 请求参数 - 优化响应式宽度+换行 -->
+                                <td class="px-4 sm:px-6 py-3 text-sm text-gray-700">
+                                    <div class="max-w-[100px] sm:max-w-[120px] truncate break-all">
+                                        {{ api.req_data|default:"无" }}
+                                    </div>
+                                </td>
+                                <!-- 响应体 - 同请求参数优化 -->
+                                <td class="px-4 sm:px-6 py-3 text-sm text-gray-700">
+                                    <div class="max-w-[100px] sm:max-w-[120px] truncate break-all">
+                                        {{ api.res_data|default:"无" }}
+                                    </div>
+                                </td>
+                                <!-- 接口介绍 - 优化截断+宽度 -->
+                                <td class="px-4 sm:px-6 py-3 text-sm text-gray-700">
+                                    <div class="max-w-[140px] sm:max-w-[180px] line-clamp-2"> <!-- 最多2行，超出省略 -->
+                                        {{ api.description|default:"暂无介绍" }}
+                                    </div>
+                                </td>
+                                <!-- 点数 - 优化徽章样式+免费标识 -->
+                                <td class="px-4 sm:px-6 py-3 whitespace-nowrap">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium
+                                        {% if api.point > 0 %}bg-amber-50 text-amber-700 border border-amber-100{% else %}bg-emerald-50 text-emerald-700 border border-emerald-100{% endif %}">
+                                        {% if api.point > 0 %}{{ api.point }} 点{% else %}免费{% endif %}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% else %}
+            <!-- 空状态 - 美化空数据提示 -->
+            <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-10 text-center">
+                <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <h4 class="text-lg font-medium text-gray-800 mb-2">暂无接口数据</h4>
+                <p class="text-gray-500">当前分类下还未上架任何API接口，敬请期待</p>
+            </div>
+            {% endif %}
+
+            <!-- 表格底部信息 - 美化样式+响应式 -->
+            <div class="mt-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-sm text-gray-500">
+                <div class="flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                    共 <span class="font-medium text-gray-800">{{ data.api_list|length }}</span> 个可用接口
+                </div>
+                {% comment %}
+                <div class="flex items-center space-x-2">
+                    <span>每页显示</span>
+                    <select class="border border-gray-200 rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[#7927F5] focus:border-[#7927F5]">
+                        <option>10</option>
+                        <option>25</option>
+                        <option>50</option>
+                    </select>
+                    <span>条</span>
+                </div>
+                {% endcomment %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 全局样式优化 - 精简+增强响应式 -->
+<style>
+    /* 移动端表格横向滚动优化（顺滑滚动） */
+    .overflow-x-auto {
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        scrollbar-color: #e2e8f0 transparent;
+    }
+    .overflow-x-auto::-webkit-scrollbar {
+        height: 6px;
+    }
+    .overflow-x-auto::-webkit-scrollbar-thumb {
+        background-color: #e2e8f0;
+        border-radius: 3px;
+    }
+    .overflow-x-auto::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+
+    /* 代码等宽字体适配 */
+    .font-mono {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    /* 小屏适配更小的内边距 */
+    @media (max-width: 640px) {
+        td, th {
+            padding-left: 3px !important;
+            padding-right: 3px !important;
+        }
+        .max-w-[100px] {
+            max-width: 80px !important;
+        }
+        .max-w-[140px] {
+            max-width: 100px !important;
+        }
+    }
+
+    /* 粘性导航仅在大屏生效 */
+    @media (max-width: 1023px) {
+        .sticky {
+            position: static !important;
+            top: auto !important;
+        }
+    }
+</style>
+{% endblock %}

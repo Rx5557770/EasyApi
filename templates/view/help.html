@@ -1,0 +1,60 @@
+{% extends "view/base.html" %}
+{% block content %}
+<div class="content mt-8 mb-16">
+    <!-- 页面标题 -->
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">常见问题</h1>
+    </div>
+
+
+    <!-- 分隔线 -->
+    <div class="border-t border-gray-200 my-8"></div>
+
+    <!-- FAQ 列表 -->
+    <div class="max-w-4xl mx-auto space-y-8">
+        <!-- FAQ 1 -->
+        {% for doc in docs %}
+        <div class="faq-item border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300">
+            <h3 class="text-xl font-semibold text-gray-900 mb-3 flex items-center">
+                {{ doc.qustion }}
+            </h3>
+            <p class="text-gray-600 leading-relaxed">
+                {{ doc.content }}
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- 底部提示 -->
+    <div class="mt-16 text-center">
+        <p class="text-gray-500 mb-4">还有更多问题？</p>
+        <a href="{% url 'joinus' %}" 
+           class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-[#7927F5] to-[#9C4FFF] text-white rounded-full hover:opacity-90 transition-opacity duration-300 font-medium">
+            <span class="mr-2">💬</span> 加入交流群，与开发者一起讨论
+        </a>
+    </div>
+</div>
+
+<style>
+    /* 自定义动画效果 */
+    .faq-item {
+        transition: all 0.3s ease;
+    }
+    
+    .faq-item:hover {
+        border-color: #7927F5;
+        transform: translateY(-2px);
+    }
+    
+    /* 响应式调整 */
+    @media (max-width: 640px) {
+        .faq-item {
+            padding: 1rem;
+        }
+        
+        .faq-item h3 {
+            font-size: 1.125rem;
+        }
+    }
+</style>
+{% endblock %}

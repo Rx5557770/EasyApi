@@ -1,0 +1,11 @@
+{% extends "view/base.html" %}
+{% load env %}
+{% block content %}
+<div class="content text-lg my-2 text-center leading-15 md:leading-10 py-10">
+    <h1 style="background-image: linear-gradient(62deg, #4060ff, #bf80ff 82.51%); -webkit-background-clip: text; background-clip: text; color: transparent;"
+        class="p-10 font-bold text-4xl tracking-wider">
+        {% get_env "WEBSITE_TITLE" %}是一个简单、易用的API接口提供平台。
+    </h1>
+    <a href="{% url 'plan' %}" class="border border-blue-300 px-8 py-3 rounded-full text-blue-600">开始使用</a>
+</div>
+{% endblock %}

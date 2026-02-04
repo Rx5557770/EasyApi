@@ -1,0 +1,294 @@
+{% load static %}
+{% load env %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% get_env "WEBSITE_TITLE" %}</title>
+    <script src="{% static 'js/tailwindcss-3.4.17.js' %}"></script>
+    <style>
+        /* 隐藏 checkbox */
+        #menu_btn {
+            display: none;
+        }
+
+        /* 菜单按钮样式 */
+        .menu-label {
+            cursor: pointer;
+            padding: 8px 16px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-label:hover {
+            background: #e9ecef;
+        }
+
+        /* 汉堡菜单图标 */
+        .hamburger {
+            width: 24px;
+            height: 2px;
+            background: #333;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger::before,
+        .hamburger::after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 2px;
+            background: #333;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger::before {
+            top: -6px;
+        }
+
+        .hamburger::after {
+            top: 6px;
+        }
+
+        /* 菜单选中状态 */
+        #menu_btn:checked+.menu-label .hamburger {
+            background: transparent;
+        }
+
+        #menu_btn:checked+.menu-label .hamburger::before {
+            transform: rotate(45deg);
+            top: 0;
+        }
+
+        #menu_btn:checked+.menu-label .hamburger::after {
+            transform: rotate(-45deg);
+            top: 0;
+        }
+
+        /* 移动端菜单样式 */
+        @media (max-width: 767px) {
+            .navbar {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                border-top: 1px solid #e5e7eb;
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-10px);
+                transition: all 0.3s ease;
+                z-index: 50;
+                padding: 0;
+                flex-direction: column;
+            }
+
+            #menu_btn:checked~.navbar {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+
+            .hd_center ul {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .hd_center li {
+                width: 100%;
+                border-bottom: 1px solid #f3f4f6;
+                text-align: center;
+            }
+
+            .hd_center li:hover {
+                background: #f9fafb;
+            }
+
+            .hd_right {
+                margin-top: 16px;
+                padding: 16px;
+                border-top: 1px solid #f3f4f6;
+            }
+
+            .hd_right ul {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+        }
+
+        /* 桌面端样式 - 重点修改部分 */
+        @media (min-width: 768px) {
+            .phone_menu {
+                display: none;
+            }
+
+            .navbar {
+                opacity: 1 !important;
+                visibility: visible !important;
+                transform: none !important;
+                position: static !important;
+                box-shadow: none !important;
+                background: transparent !important;
+                /* 修改：让navbar占满剩余空间 */
+                flex: 1;
+                /* 修改：调整内部布局为flex row，center居中，right靠右 */
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            /* 修改：让中间菜单区域占满空间并居中 */
+            .hd_center {
+                flex: 1;
+                display: flex;
+                justify-content: center;
+            }
+
+            /* 修改：右侧登录注册区域靠右对齐 */
+            .hd_right {
+                display: flex;
+                justify-content: flex-end;
+            }
+        }
+
+        /* 优化基础样式 */
+        .hd_center li {
+            transition: all 0.2s ease;
+        }
+
+        .hd_right li:last-child a {
+            transition: all 0.2s ease;
+        }
+
+        .hd_right li:last-child:hover a {
+            background: #333;
+        }
+
+        /* 新增：用户信息样式优化 */
+        .user-info {
+            color: #7927F5;
+            font-weight: 500;
+            margin-right: 8px;
+        }
+
+        .logout-btn {
+            background: #f87171 !important;
+            color: white !important;
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background: #ef4444 !important;
+        }
+
+        /* 隐藏退出登录的表单 */
+        #logout-form {
+            display: none;
+        }
+    </style>
+    {% block head %}
+    {% endblock %}
+</head>
+
+<body>
+    <!-- 主容器 -->
+    <div class="container mx-auto px-4 md:px-4 max-w-7xl md:leading-10 md:text-sm">
+        <!-- 头部 -->
+        <div class="header flex my-2 justify-between md:justify-between relative md:items-center">
+            <!-- 头部左侧 -->
+            <div class="hd_left basis-1/6 md:basis-auto">
+                <a href="#" class="text-xl font-bold text-[#7927F5]">{% get_env "WEBSITE_TITLE" %}</a>
+            </div>
+
+            <!-- 手机菜单按钮 -->
+            <input type="checkbox" id="menu_btn">
+            <label for="menu_btn" class="menu-label md:hidden flex items-center justify-center">
+                <span class="hamburger"></span>
+            </label>
+
+            <!-- 右侧收缩区 -->
+            <div class="navbar w-full">
+                <!-- 头部中间 -->
+                <div class="hd_center basis-4/6">
+                    <ul class="flex justify-center gap-x-4 flex-col md:flex-row">
+                        <li
+                            class="px-4 py-3 md:py-0 md:border-b-2 md:border-transparent hover:border-[#7927F5] hover:text-[#7927F5]">
+                            <a href="{% url 'index' %}" class="w-full inline-block text-center md:text-left">首页</a>
+                        </li>
+                        <li
+                            class="px-4 py-3 md:py-0 md:border-b-2 md:border-transparent hover:border-[#7927F5] hover:text-[#7927F5]">
+                            <a href="{% url 'apihub' %}" class="w-full inline-block text-center md:text-left">API
+                                Hub</a>
+                        </li>
+                        <li
+                            class="px-4 py-3 md:py-0 md:border-b-2 md:border-transparent hover:border-[#7927F5] hover:text-[#7927F5]">
+                            <a href="{% url 'plan' %}" class="w-full inline-block text-center md:text-left">套餐</a>
+                        </li>
+                        <li
+                            class="px-4 py-3 md:py-0 md:border-b-2 md:border-transparent hover:border-[#7927F5] hover:text-[#7927F5]">
+                            <a href="{% url 'help' %}" class="w-full inline-block text-center md:text-left">帮助</a>
+                        </li>
+                        <li
+                            class="px-4 py-3 md:py-0 md:border-b-2 md:border-transparent hover:border-[#7927F5] hover:text-[#7927F5]">
+                            <a href="{% url 'joinus' %}" class="w-full inline-block text-center md:text-left">交流群</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 头部右侧 - 核心修改部分 -->
+                <div class="hd_right basis-2/6">
+                    <ul class="flex flex-col md:flex-row md:items-center">
+                        {% if user.is_authenticated %}
+                        <!-- 已登录状态：显示用户信息和退出登录 -->
+                        <li class="px-4 py-3 md:py-0">
+                            <span class="user-info inline-block w-full text-center md:text-left">
+                                {{ user.username }}
+                            </span>
+                        </li>
+                        <li
+                            class="px-4 py-3 md:py-0 md:border-b-2 md:border-transparent hover:text-[#7927F5]">
+                            <a href="{% url 'profile' %}" class="w-full inline-block text-center md:text-left py-1 px-4 rounded-full hover:bg-green-300 bg-green-400 text-white ">仪表盘</a>
+                        </li>
+
+                        <li class="px-4 py-3 md:py-0 md:ml-4">
+                            <!-- 退出登录按钮（触发POST表单） -->
+                            <button onclick="document.getElementById('logout-form').submit()"
+                                class="inline-block w-full text-center logout-btn py-1 px-4 rounded-full hover:bg-gray-800 transition-colors">退出登录</button>
+                            <!-- 隐藏的POST退出登录表单 -->
+                            <form id="logout-form" method="post" action="{% url 'auth:logout' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{% url 'index' %}">
+                            </form>
+                        </li>
+                        {% else %}
+                        <!-- 未登录状态：显示登录和注册 -->
+                        <li class="px-4 py-3 md:py-0 hover:text-[#7927F5] md:px-2">
+                            <a href="{% url 'auth:login' %}" class="inline-block w-full text-center md:text-left py-1 px-4 rounded-full hover:bg-green-300 bg-green-400 text-white transition-colors">登录</a>
+                        </li>
+                        <li class="px-4 py-3 md:py-0 md:ml-4">
+                            <a href="{% url 'auth:register' %}"
+                                class="inline-block w-full text-center bg-black text-white py-1 px-4 rounded-full hover:bg-gray-800 transition-colors">免费注册</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 内容 -->
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+
+</html>

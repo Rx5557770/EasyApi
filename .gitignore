@@ -1,0 +1,15 @@
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+.venv
+.idea
+media
+static
+.python-version
+pyproject.toml
+uv.lock
+.env
