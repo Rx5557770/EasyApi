@@ -1,96 +1,93 @@
 {% extends "view/base.html" %}
 {% block head %}
 <style>
-    /* 价格卡片样式 - 缩小尺寸 */
     .price-card {
         transition: all 0.3s ease;
+        height: 100%;
     }
     .price-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px -5px rgba(121, 39, 245, 0.1), 0 6px 8px -6px rgba(121, 39, 245, 0.1);
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(121, 39, 245, 0.15);
     }
-    /* 渐变背景 */
     .gradient-bg {
         background: linear-gradient(135deg, #7927F5 0%, #9c60f8 100%);
     }
-    /* 按钮样式优化 - 缩小按钮 */
     .btn-white {
         transition: all 0.2s ease;
-        padding: 0.5rem 1rem !important;
-        font-size: 0.875rem !important;
     }
     .btn-white:hover {
         background-color: #f3f4f6;
         color: #7927F5;
-    }
-    .btn-purple {
-        transition: all 0.2s ease;
-        padding: 0.5rem 1rem !important;
-        font-size: 0.875rem !important;
-    }
-    .btn-purple:hover {
-        background-color: #611fc9;
+        transform: scale(1.02);
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="content py-8 md:py-12">
-    <!-- 页面标题 - 缩小标题和间距 -->
-    <div class="text-center mb-8 md:mb-10">
-        <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-3">价格表</h1>
-        <p class="text-gray-600 max-w-2xl mx-auto text-sm md:text-base mb-2">选择适合你的 API 服务套餐。</p>
-        <p class="text-gray-600 max-w-2xl mx-auto text-sm md:text-base">Point是使用Api的积分，部分API免费使用，只需注册账号。</p>
-
+<div class="py-12 md:py-16">
+    <!-- 页面标题 -->
+    <div class="text-center mb-16">
+        <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            选择您的套餐
+        </h1>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-3">
+            灵活的定价方案，满足不同的需求
+        </p>
+        <p class="text-gray-600 text-base">
+            Point是使用API的积分，部分API免费使用，只需注册账号
+        </p>
     </div>
 
-    <!-- 价格卡片容器 - 缩小卡片间距 -->
-    <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+    <!-- 价格卡片容器 -->
+    <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- 套餐卡片 -->
+        {% for plan in plan_list %}
+        <div class="price-card rounded-2xl overflow-hidden shadow-lg gradient-bg">
+            <div class="text-white p-8 h-full flex flex-col justify-between">
+                <!-- 套餐头部 -->
+                <div class="mb-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <h2 class="text-3xl font-bold">{{ plan.name }}</h2>
+                        <span class="bg-white/20 text-white px-3 py-1 rounded-full text-xs font-semibold border border-white/30">
+                            推荐
+                        </span>
+                    </div>
+                    <!-- 价格显示 -->
+                    <div class="mb-6">
+                        <div class="text-5xl font-bold mb-2">
+                            <span class="text-white">¥</span><span class="text-green-300">{{ plan.price }}</span>
+                        </div>
+                        <p class="text-white/80">包含 <strong class="text-green-300">{{ plan.points }}</strong> Point</p>
+                    </div>
+                </div>
 
 
-        <!-- 套餐卡片 - 缩小内边距和字体 -->
-         {% for plan in plan_list %}
-        <div class="price-card rounded-xl overflow-hidden shadow-lg border-0 gradient-bg">
-            <div class="text-white p-5 md:p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl md:text-2xl font-bold">{{ plan.name }}</h2>
-                    <span class="bg-white/20 text-white px-2 py-0.5 rounded-full text-xs font-medium">hot</span>
-                </div>                
-                <!-- 套餐权益 - 缩小间距和字体 -->
-                <ul class="space-y-2.5 mb-5">
 
-                   <li class="flex items-center text-sm">
-                        售价：<span class="text-green-300 font-bold text-2xl mr-2">{{ plan.price }}</span>元
-                    </li> 
-
-                    <li class="flex items-center text-sm">
-                        Point：<span class="">{{ plan.points }}</span>
-                    </li> 
-                </ul>
-                
-                <!-- 操作按钮 - 缩小按钮尺寸 -->
-                <div class="flex flex-col sm:flex-row gap-3">
+                <!-- 操作按钮 -->
+                <div class="pt-6 border-t border-white/20">
                     {% if user.is_authenticated %}
-                        <a href="{% url 'order:alipay' plan.id %}" class="btn-white bg-white text-[#7927F5] px-4 py-2 rounded-lg font-medium text-center hover:shadow-md text-sm">
-                            立即购买
-                        </a>
+                    <a href="{% url 'order:alipay' plan.id %}" class="btn-white bg-white text-[#7927F5] w-full px-6 py-3 rounded-lg font-semibold text-center hover:shadow-lg transition-all text-base">
+                        立即购买
+                    </a>
                     {% else %}
-                         <a href="{% url 'auth:register' %}" class="btn-white bg-white text-[#7927F5] px-4 py-2 rounded-lg font-medium text-center hover:shadow-md text-sm">
-                            注册体验
-                         </a>
-                        {% endif %}
+                    <a href="{% url 'auth:register' %}" class="btn-white bg-white text-[#7927F5] w-full px-6 py-3 rounded-lg font-semibold text-center hover:shadow-lg transition-all text-base">
+                        注册体验
+                    </a>
+                    {% endif %}
                 </div>
             </div>
         </div>
         {% empty %}
-            暂无套餐
+        <div class="col-span-1 md:col-span-2 text-center py-12">
+            <p class="text-gray-500 text-lg">暂无套餐</p>
+        </div>
         {% endfor %}
-
     </div>
 
-    <!-- 底部说明 - 缩小字体和间距 -->
-    <div class="max-w-3xl mx-auto mt-8 text-center text-gray-500 text-xs">
-        <p>如有定制化需求，请联系我们获取专属解决方案</p>
+    <!-- 底部说明 -->
+    <div class="max-w-3xl mx-auto mt-16 pt-12 border-t border-gray-200 text-center">
+        <p class="text-gray-600 text-base mb-3">有其他需求？</p>
+        <p class="text-gray-500 text-sm">如有定制化需求，请联系我们获取专属解决方案</p>
     </div>
 </div>
 {% endblock %}

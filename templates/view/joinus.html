@@ -1,7 +1,45 @@
 {% extends "view/base.html" %}
+{% load env %}
 {% block content %}
-<div class="content">
-    <a class="text-blue border border-black rounded-full px-8 py-1 inline-block" href="https://qun.qq.com/universal-share/share?ac=1&authKey=9bZDfa6rOEV6F91dI5PMSWvprlddIS5LurpgsSY6enYUSB5cw90yq0eQo%2FOQEyEK&busi_data=eyJncm91cENvZGUiOiIxMDgxNjEwMjEwIiwidG9rZW4iOiJxWFpqVDVDR0RnbUNLbW0weEFKTVpsc25vOS9ZZWJ6ZTlhdmRvNWNCTDhyQm12SkFJOTBMeWIwaEtqdEE4a0EvIiwidWluIjoiMTkzMDk2OTMyOSJ9&data=bkTAIUwYsCVawdBAVFf_CHuPzAVmKFh9RRtLa3oQ2Bk6mt2a6P_UrBORzwOcz4CvYeKCjUXsrrqxSelcYAw25Q&svctype=4&tempid=h5_group_info">QQ群</a>
+<div class="min-h-screen py-12 md:py-16">
+    <div class="max-w-3xl mx-auto px-4">
+        <!-- 页面标题 -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                加入我们的社区
+            </h1>
+            <p class="text-lg text-gray-600">
+                与开发者、用户和技术团队进行实时交流和讨论
+            </p>
+        </div>
 
+        <!-- 交流方式卡片 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <!-- QQ 群 -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 hover:shadow-lg hover:border-[#7927F5]/30 transition-all">
+                <div class="flex items-center justify-center w-16 h-16 mx-auto bg-blue-100 rounded-full mb-6">
+                    <svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 16.5a2 2 0 11-4 0 2 2 0 014 0zM15 16.5a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        <path d="M18 8a1 1 0 10-2 0v3.5h3.5a1 1 0 102 0V8z"/>
+                        <path fill-rule="evenodd" d="M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm14 0H6v12h12V6z"/>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-900 text-center mb-3">QQ 交流群</h2>
+                <p class="text-gray-600 text-center mb-6">快速获得帮助，实时交流互动</p>
+                <a href="https://qun.qq.com/universal-share/share?ac=1&authKey=9bZDfa6rOEV6F91dI5PMSWvprlddIS5LurpgsSY6enYUSB5cw90yq0eQo%2FOQEyEK&busi_data=eyJncm91cENvZGUiOiIxMDgxNjEwMjEwIiwidG9rZW4iOiJxWFpqVDVDR0RnbUNLbW0weEFKTVpsc25vOS9ZZWJ6ZTlhdmRvNWNCTDhyQm12SkFJOTBMeWIwaEtqdEE4a0EvIiwidWluIjoiMTkzMDk2OTMyOSJ9&data=bkTAIUwYsCVawdBAVFf_CHuPzAVmKFh9RRtLa3oQ2Bk6mt2a6P_UrBORzwOcz4CvYeKCjUXsrrqxSelcYAw25Q&svctype=4&tempid=h5_group_info" 
+                   target="_blank"
+                   class="inline-block w-full text-center bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 rounded-lg transition-all duration-200 transform hover:shadow-lg">
+                    进入
+                    <svg class="w-4 h-4 inline-block ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                    </svg>
+                </a>
+            </div>
+
+        </div>
+
+    </div>
 </div>
+
+{% load env %}
 {% endblock %}

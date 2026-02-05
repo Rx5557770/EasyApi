@@ -1,66 +1,50 @@
 {% extends 'auth/base.html' %}
 
 {% block title %}登录{% endblock %}
-{% block bodytitle %}登录{% endblock %}
+{% block bodytitle %}登录账户{% endblock %}
 
 {% block formbody %}
 <!-- 登录表单 -->
-<form action="{% url 'auth:login' %}" method="post" class="formbody">
+<form action="{% url 'auth:login' %}" method="post" class="formbody space-y-4">
     {% csrf_token %}
 
-{% if form.errors %}
-    <div class="bg-red-500 text-white p-4 rounded-md mb-4">
-    {% for field, errors in form.errors.items %}
+    {% if form.errors %}
+    <div class="bg-red-500/10 border border-red-500/30 text-red-400 p-3 rounded-lg text-sm">
+        {% for field, errors in form.errors.items %}
             {% for error in errors %}
-                <p>{{ error }}</p>
+                <p class="flex items-center"><svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"/></svg>{{ error }}</p>
             {% endfor %}
-    {% endfor %}
+        {% endfor %}
     </div>
-{% endif %}
+    {% endif %}
 
     {% for field in form %}
-    <div class="mb-6">
+    <div class="mb-5">
         <label for="{{ field.id_for_label }}" class="block text-gray-300 mb-2 text-sm font-medium">{{ field.label }}</label>
-        {{ field }}
+        {% if field.field.widget.input_type == 'password' %}
+            <input type="password" id="{{ field.id_for_label }}" name="{{ field.name }}" class="form-input w-full px-4 py-2.5 rounded-lg bg-[#252636] border border-gray-700 text-white placeholder-gray-500 focus:border-[#7927F5] transition-all" placeholder="请输入密码" required>
+        {% else %}
+            <input type="text" id="{{ field.id_for_label }}" name="{{ field.name }}" class="form-input w-full px-4 py-2.5 rounded-lg bg-[#252636] border border-gray-700 text-white placeholder-gray-500 focus:border-[#7927F5] transition-all" placeholder="请输入邮箱或用户名" required>
+        {% endif %}
     </div>
     {% endfor %}
-    {% comment %} <!-- 用户名输入框 -->
-    <div class="mb-6">
-        <label for="username" class="block text-gray-300 mb-2 text-sm font-medium">邮箱</label>
-        <input 
-            type="text" 
-            id="username" 
-            name="username" 
-            class="form-input w-full p-3 rounded-lg bg-[#252636] border border-gray-700 text-white focus:border-[#7927F5] transition-colors"
-            placeholder="请输入用户名"
-            required
-        >
-    </div> {% endcomment %}
-
-    {% comment %} <!-- 邮箱输入框 -->
-    <div class="mb-6">
-    <label for="{{form.email.id_for_label}}" class="block text-gray-300 mb-2 text-sm font-medium">邮箱</label>
-    {{ form.email }}
-    </div>
-    <!-- 密码输入框 -->
-    <div class="mb-8">
-        <label for="{{ form.password.id_for_label }}" class="block text-gray-300 mb-2 text-sm font-medium">密码</label>
-        {{ form.password }}
-    </div> {% endcomment %}
     
     <!-- 登录按钮 -->
     <button 
         type="submit" 
-        class="btn-auth w-full p-3 rounded-lg bg-[#7927F5] text-white font-bold text-lg"
+        class="btn-auth w-full px-4 py-2.5 rounded-lg bg-gradient-to-r from-[#7927F5] to-[#9c60f8] text-white font-bold text-base shadow-lg hover:shadow-xl"
     >
         登录
     </button>
     
     <!-- 注册链接 -->
     <div class="mt-6 text-center">
-        <a href="{% url 'auth:register' %}" class="text-gray-400 hover:text-[#7927F5] text-sm transition-colors">
-            还没有账号？立即注册
-        </a>
+        <p class="text-gray-400 text-sm">
+            还没有账号？
+            <a href="{% url 'auth:register' %}" class="text-[#7927F5] hover:text-[#9c60f8] font-medium transition-colors">
+                立即注册
+            </a>
+        </p>
     </div>
 </form>
 {% endblock %}

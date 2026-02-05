@@ -2,31 +2,33 @@
 {% load static %}
 
 {% block content %}
-<div class="mt-6 md:mt-8 px-4 sm:px-0">
-    <!-- 页面标题 - 响应式字号/间距 -->
-    <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">API Hub</h1>
-    <p class="text-gray-600 mb-6 md:mb-8">开放 API 共享平台，发现更多公开 API 项目</p>
+<div class="py-6 sm:py-8">
+    <!-- 页面标题 -->
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">API Hub</h1>
+        <p class="text-gray-600 text-lg">开放 API 共享平台，发现更多公开 API 项目</p>
+    </div>
 
-    <div class="flex flex-col lg:flex-row gap-6 lg:gap-8">
-        <!-- 左侧边栏 - 优化响应式、阴影、悬浮、选中态 -->
-        <div class="lg:w-1/5 w-full shrink-0"> <!-- 小屏占满，大屏收窄为1/5更协调 -->
-            <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5 sticky top-8"> <!-- 粘性导航+轻阴影 -->
-                <h3 class="font-semibold text-lg text-gray-800 mb-4 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-[#7927F5]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8">
+        <!-- 左侧边栏 -->
+        <div class="lg:col-span-1">
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 sticky top-20">
+                <h3 class="font-bold text-lg text-gray-900 mb-4 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-[#7927F5]" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M5 3a2 2 0 012-2h6a2 2 0 012 2v2h2a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V7a2 2 0 012-2h2V3z"/>
                     </svg>
                     项目分类
                 </h3>
-                <ul class="space-y-1"> <!-- 缩小间距更紧凑 -->
+                <ul class="space-y-2">
                     <li>
-                        <a href="{% url 'apihub' %}" class="flex items-center w-full px-3 py-2 rounded-lg text-gray-700 hover:bg-purple-50 hover:text-[#7927F5] transition-all duration-200">
+                        <a href="{% url 'apihub' %}" class="flex items-center w-full px-3 py-2 rounded-lg text-gray-700 hover:bg-purple-50 hover:text-[#7927F5] transition-all font-medium">
                             全部分类
                         </a>
                     </li>
                     {% for project in data.project_list %}
                     {% if project.is_show %}
                     <li>
-                        <a href="{% url 'apihub_oneProject' project.id %}" class="flex items-center w-full px-3 py-2 rounded-lg text-gray-700 hover:bg-purple-50 hover:text-[#7927F5] transition-all duration-200">
+                        <a href="{% url 'apihub_oneProject' project.id %}" class="flex items-center w-full px-3 py-2 rounded-lg text-gray-700 hover:bg-purple-50 hover:text-[#7927F5] transition-all">
                             {{ project.name }}
                         </a>
                     </li>
@@ -37,11 +39,8 @@
         </div>
 
         <!-- 右侧内容区域 -->
-        <div class="lg:w-4/5 w-full">
-            <!-- 分隔线 - 优化样式 -->
-            <div class="border-b border-gray-100 mb-6"></div>
-
-            <!-- API 表格 - 深度美化+响应式适配 -->
+        <div class="lg:col-span-4">
+            <!-- API 表格 -->
             {% if data.api_list %}
             <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
                 <div class="overflow-x-auto">
@@ -55,7 +54,7 @@
                                 <th scope="col" class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">请求参数</th>
                                 <th scope="col" class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">响应体</th>
                                 <th scope="col" class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">接口介绍</th>
-                                <th scope="col" class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">消耗点数</th>
+                                <th scope="col" class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Point</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-100">
@@ -112,7 +111,7 @@
                                 <td class="px-4 sm:px-6 py-3 whitespace-nowrap">
                                     <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium
                                         {% if api.point > 0 %}bg-amber-50 text-amber-700 border border-amber-100{% else %}bg-emerald-50 text-emerald-700 border border-emerald-100{% endif %}">
-                                        {% if api.point > 0 %}{{ api.point }} 点{% else %}免费{% endif %}
+                                        {% if api.point > 0 %}{{ api.point }} Point{% else %}免费{% endif %}
                                     </span>
                                 </td>
                             </tr>

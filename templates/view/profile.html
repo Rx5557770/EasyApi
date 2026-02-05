@@ -2,133 +2,138 @@
 {% load env %}
 {% block content %}
 <div class="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-3xl mx-auto">
-        <!-- 用户信息卡片 -->
-        <div class="bg-white shadow-lg rounded-2xl p-6 mb-8">
-            <div class="flex items-center mb-6">
-                <p class="text-sm text-gray-500 mt-2">您当前的点数为:<span class="text-red-500">{{ user.user_info.points }}</span></p>
+    <div class="max-w-4xl mx-auto">
+        <!-- 用户欢迎卡片 -->
+        <div class="bg-gradient-to-r from-[#7927F5] to-[#9c60f8] rounded-2xl shadow-lg p-8 text-white mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold mb-2">欢迎回来，{{ user.username }}！</h1>
+            <p class="text-white/80 text-lg">管理您的 API 凭证和订单</p>
+            <!-- 积分显示 -->
+            <div class="mt-6 bg-white/10 rounded-lg p-4 backdrop-blur-sm border border-white/20">
+                <div class="flex items-center justify-between">
+                    <span class="text-white/80">Point</span>
+                    <span class="text-4xl font-bold">{{ user.user_info.points }}</span>
+                </div>
             </div>
+        </div>
 
-            <!-- Token信息 -->
-            <div class="mb-6">
-                <h2 class="text-lg font-semibold text-gray-700 mb-3 flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        <!-- 信息卡片容器 -->
+        <div class="space-y-8">
+            <!-- Token 信息卡片 -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 hover:shadow-md transition-shadow">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                    <svg class="w-6 h-6 mr-3 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"/>
                     </svg>
                     API Token
                 </h2>
-                <div class="bg-gray-50 border border-gray-300 rounded-lg p-4">
-                    <div class="flex items-center justify-between">
-                        <code id="token-text" class="font-mono text-gray-800 text-sm sm:text-base break-all">{{ user.user_info.token }}</code>
-                        <button id="copy-btn" class="ml-3 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors flex items-center text-sm whitespace-nowrap">
-                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-4">
+                    <div class="flex items-center justify-between gap-4 flex-wrap">
+                        <code id="token-text" class="font-mono text-sm sm:text-base text-gray-800 break-all flex-1 min-w-0">
+                            {{ user.user_info.token }}
+                        </code>
+                        <button id="copy-btn" class="flex-shrink-0 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors flex items-center whitespace-nowrap">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
                             </svg>
-                            复制Token
+                            复制
                         </button>
                     </div>
                 </div>
-                <p class="text-sm text-gray-500 mt-2">请妥善保管您的Token，避免泄露</p>
+                <p class="text-sm text-gray-500">🔐 请妥善保管您的 Token，避免泄露，它被用于认证您的 API 请求</p>
             </div>
 
-            <!-- 接口调用地址 -->
-            <div>
-                <h2 class="text-lg font-semibold text-gray-700 mb-3 flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+            <!-- API 调用地址卡片 -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 hover:shadow-md transition-shadow">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                    <svg class="w-6 h-6 mr-3 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM15.657 14.243a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM11 17a1 1 0 102 0v-1a1 1 0 10-2 0v1zM5.757 15.657a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM3 10a1 1 0 011-1h1a1 1 0 110 2H4a1 1 0 01-1-1zM5.757 5.757a1 1 0 000-1.414L5.05 3.636a1 1 0 10-1.414 1.414l.707.707z"/>
                     </svg>
                     接口调用地址
                 </h2>
-                <div class="bg-gray-900 rounded-lg p-4">
-                    <code class="text-gray-300 text-sm sm:text-base break-all">
-                        {% get_env "API_HOST" %}/apis/<span class="text-yellow-300">接口id</span>?token={{ user.user_info.token }}
+                <div class="bg-gray-900 rounded-xl p-4 mb-4 overflow-x-auto">
+                    <code class="text-gray-300 text-sm break-all">
+                        {% get_env "API_HOST" %}/apis/<span class="text-yellow-300 font-semibold">接口ID</span>?token=<span class="text-cyan-300">{{ user.user_info.token }}</span>
                     </code>
                 </div>
-                <p class="text-sm text-gray-500 mt-2">将<span class="font-mono text-blue-600">接口id</span>替换为具体接口ID即可调用</p>
+                <p class="text-sm text-gray-500">将 <span class="font-mono bg-gray-100 px-2 py-1 rounded text-blue-600">接口ID</span> 替换为具体接口ID即可调用</p>
             </div>
-        </div>
 
-        <!-- 修改Token表单 -->
-        <div class="bg-white shadow-lg rounded-2xl p-6 mb-8">
-            <h2 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
-                <svg class="w-5 h-5 mr-2 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
-                </svg>
-                修改Token
-            </h2>
-            <p class="text-gray-600 mb-4">生成新的Token后，旧的Token将立即失效，请谨慎操作。</p>
-            <form method="post" action="{% url 'auth:change_token' %}">
-                {% csrf_token %}
-                <button type="submit" onclick="return confirm('确定要生成新的Token吗？旧的Token将立即失效！')"
-                        class="w-full sm:w-auto bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            <!-- Token 管理卡片 -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 hover:shadow-md transition-shadow">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                    <svg class="w-6 h-6 mr-3 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"/>
                     </svg>
-                    生成新Token
-                </button>
-            </form>
-        </div>
+                    重新生成 Token
+                </h2>
+                <p class="text-gray-600 mb-6">生成新的 Token 后，旧的 Token 将立即失效。请谨慎操作此操作。</p>
+                <form method="post" action="{% url 'auth:change_token' %}">
+                    {% csrf_token %}
+                    <button type="submit" onclick="return confirm('确定要生成新的 Token 吗？旧的 Token 将立即失效！')"
+                            class="w-full sm:w-auto bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 transform hover:shadow-lg active:scale-95 flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                        </svg>
+                        生成新 Token
+                    </button>
+                </form>
+            </div>
 
-        <!-- 新增：我的订单列表模块 -->
-        <div class="bg-white shadow-lg rounded-2xl p-6">
-            <h2 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
-                <svg class="w-5 h-5 mr-2 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"/>
-                </svg>
-                我的订单列表
-            </h2>
-            <!-- 无订单时的空状态 -->
-            {% if not order_list %}
+            <!-- 订单列表卡片 -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 hover:shadow-md transition-shadow">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                    <svg class="w-6 h-6 mr-3 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM5 16a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    我的订单
+                </h2>
+
+                {% if not order_list %}
                 <div class="py-12 text-center">
-                    <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
-                        <path fill-rule="evenodd" d="M19 10a9 9 0 11-18 0 9 9 0 0118 0zm-2 0a7 7 0 11-14 0 7 7 0 0114 0z" clip-rule="evenodd"/>
+                    <svg class="w-20 h-20 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4l1-12z"/>
                     </svg>
-                    <p class="text-gray-500">暂无订单记录，快去下单吧～</p>
+                    <p class="text-gray-500 text-lg">暂无订单记录</p>
+                    <p class="text-gray-400 text-sm mt-2">快去购买套餐吧</p>
+                    <a href="{% url 'plan' %}" class="inline-block mt-4 px-6 py-2 bg-[#7927F5] text-white rounded-lg font-medium hover:bg-[#611fc9] transition-colors">
+                        查看套餐
+                    </a>
                 </div>
-            {% else %}
-                <!-- 有订单时的表格布局 -->
+                {% else %}
                 <div class="overflow-x-auto">
-                    <table class="w-full text-sm text-left">
-                        <thead class="text-gray-600 border-b border-gray-200">
-                            <tr>
-                                <th class="pb-3 px-2">订单编号</th>
-                                <th class="pb-3 px-2">购买套餐</th>
-                                <th class="pb-3 px-2">支付方式</th>
-                                <th class="pb-3 px-2">支付金额</th>
-                                <th class="pb-3 px-2">支付状态</th>
-                                <th class="pb-3 px-2">创建时间</th>
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b-2 border-gray-200 text-gray-700">
+                                <th class="text-left py-3 px-4 font-semibold">订单编号</th>
+                                <th class="text-left py-3 px-4 font-semibold hidden sm:table-cell">套餐</th>
+                                <th class="text-left py-3 px-4 font-semibold hidden md:table-cell">支付方式</th>
+                                <th class="text-left py-3 px-4 font-semibold">金额</th>
+                                <th class="text-left py-3 px-4 font-semibold">状态</th>
+                                <th class="text-left py-3 px-4 font-semibold hidden lg:table-cell">时间</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
                             {% for order in order_list %}
-                                <tr class="hover:bg-gray-50">
-                                    <!-- 系统订单编号 -->
-                                    <td class="py-3 px-2 font-mono text-sm">{{ order.order_sn }}</td>
-                                    <!-- 套餐名称（兼容套餐为null的情况） -->
-                                    <td class="py-3 px-2">{{ order.plan.name|default:"未知套餐" }}</td>
-                                    <!-- 支付方式（显示中文） -->
-                                    <td class="py-3 px-2">{{ order.get_pay_type_display }}</td>
-                                    <!-- 支付金额（保留两位小数） -->
-                                    <td class="py-3 px-2 text-red-500 font-medium">¥{{ order.total_amount }}</td>
-                                    <!-- 支付状态（带样式区分） -->
-                                    <td class="py-3 px-2">
-                                        {% if order.state %}
-                                            <span class="inline-block px-2 py-1 bg-green-100 text-green-700 rounded text-xs">已支付</span>
-                                        {% else %}
-                                            <span class="inline-block px-2 py-1 bg-orange-100 text-orange-700 rounded text-xs">未支付</span>
-                                        {% endif %}
-                                    </td>
-                                    <!-- 创建时间（格式化） -->
-                                    <td class="py-3 px-2 text-gray-500">
-                                        {{ order.create_date|date:"Y-m-d H:i:s" }}
-                                    </td>
-                                </tr>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="py-4 px-4 font-mono text-gray-700">{{ order.order_sn }}</td>
+                                <td class="py-4 px-4 hidden sm:table-cell text-gray-700">{{ order.plan.name|default:"未知套餐" }}</td>
+                                <td class="py-4 px-4 hidden md:table-cell text-gray-700">{{ order.get_pay_type_display }}</td>
+                                <td class="py-4 px-4 text-red-500 font-semibold">¥{{ order.total_amount }}</td>
+                                <td class="py-4 px-4">
+                                    {% if order.state %}
+                                    <span class="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-semibold">✓ 已支付</span>
+                                    {% else %}
+                                    <span class="inline-block px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-semibold">⏳ 待支付</span>
+                                    {% endif %}
+                                </td>
+                                <td class="py-4 px-4 text-gray-500 hidden lg:table-cell">{{ order.create_date|date:"m-d H:i" }}</td>
+                            </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
-            {% endif %}
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>
@@ -140,75 +145,56 @@ function copyToken() {
     const copyBtn = document.getElementById('copy-btn');
     const originalText = copyBtn.innerHTML;
 
-    // 使用现代剪贴板API
     if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(token).then(() => {
-            // 显示成功反馈
-            copyBtn.innerHTML = '<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>已复制';
-            copyBtn.classList.remove('bg-gray-100', 'hover:bg-gray-200', 'text-gray-700');
-            copyBtn.classList.add('bg-green-100', 'text-green-700', 'hover:bg-green-200');
+            copyBtn.innerHTML = '<svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>已复制';
+            copyBtn.classList.remove('bg-blue-500', 'hover:bg-blue-600');
+            copyBtn.classList.add('bg-green-500', 'hover:bg-green-600');
 
-            // 2秒后恢复
             setTimeout(() => {
                 copyBtn.innerHTML = originalText;
-                copyBtn.classList.remove('bg-green-100', 'text-green-700', 'hover:bg-green-200');
-                copyBtn.classList.add('bg-gray-100', 'hover:bg-gray-200', 'text-gray-700');
+                copyBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
+                copyBtn.classList.add('bg-blue-500', 'hover:bg-blue-600');
             }, 2000);
         }).catch(err => {
-            console.error('剪贴板API复制失败:', err);
-            // 降级方案：使用老式方法
+            console.error('复制失败:', err);
             fallbackCopyText(token);
         });
     } else {
-        // 降级方案：使用老式方法
         fallbackCopyText(token);
     }
 }
 
-// 降级复制方法
 function fallbackCopyText(text) {
     const textArea = document.createElement('textarea');
     textArea.value = text;
-
-    // 避免滚动到文本区域
     textArea.style.position = 'fixed';
     textArea.style.left = '-999999px';
-    textArea.style.top = '-999999px';
     document.body.appendChild(textArea);
-
-    textArea.focus();
     textArea.select();
 
     try {
         const successful = document.execCommand('copy');
         const copyBtn = document.getElementById('copy-btn');
-        const originalText = copyBtn.innerHTML;
-
+        
         if (successful) {
-            // 显示成功反馈
-            copyBtn.innerHTML = '<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>已复制';
-            copyBtn.classList.remove('bg-gray-100', 'hover:bg-gray-200', 'text-gray-700');
-            copyBtn.classList.add('bg-green-100', 'text-green-700', 'hover:bg-green-200');
-
-            // 2秒后恢复
+            copyBtn.innerHTML = '<svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>已复制';
+            copyBtn.classList.remove('bg-blue-500', 'hover:bg-blue-600');
+            copyBtn.classList.add('bg-green-500', 'hover:bg-green-600');
+            
             setTimeout(() => {
-                copyBtn.innerHTML = originalText;
-                copyBtn.classList.remove('bg-green-100', 'text-green-700', 'hover:bg-green-200');
-                copyBtn.classList.add('bg-gray-100', 'hover:bg-gray-200', 'text-gray-700');
+                copyBtn.innerHTML = '<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>复制';
+                copyBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
+                copyBtn.classList.add('bg-blue-500', 'hover:bg-blue-600');
             }, 2000);
-        } else {
-            // 复制失败
-            alert('复制失败，请手动复制：\n' + text);
         }
     } catch (err) {
-        console.error('老式复制方法失败:', err);
-        alert('复制失败，请手动复制：\n' + text);
+        alert('复制失败，请手动复制');
     } finally {
         document.body.removeChild(textArea);
     }
 }
 
-// 绑定点击事件
 document.addEventListener('DOMContentLoaded', function() {
     const copyBtn = document.getElementById('copy-btn');
     if (copyBtn) {

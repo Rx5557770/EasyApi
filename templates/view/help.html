@@ -1,60 +1,92 @@
 {% extends "view/base.html" %}
 {% block content %}
-<div class="content mt-8 mb-16">
+<div class="py-12 md:py-16">
     <!-- 页面标题 -->
-    <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-gray-900 mb-4">常见问题</h1>
+    <div class="text-center mb-16">
+        <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">常见问题</h1>
+        <p class="text-lg text-gray-600">查找关于 API 服务的常见问题和解决方案</p>
     </div>
-
 
     <!-- 分隔线 -->
-    <div class="border-t border-gray-200 my-8"></div>
+    <div class="border-t border-gray-200 my-12"></div>
 
     <!-- FAQ 列表 -->
-    <div class="max-w-4xl mx-auto space-y-8">
-        <!-- FAQ 1 -->
-        {% for doc in docs %}
-        <div class="faq-item border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300">
-            <h3 class="text-xl font-semibold text-gray-900 mb-3 flex items-center">
-                {{ doc.qustion }}
-            </h3>
-            <p class="text-gray-600 leading-relaxed">
-                {{ doc.content }}
-            </p>
+    <div class="max-w-3xl mx-auto">
+        {% if docs %}
+        <div class="space-y-6">
+            {% for doc in docs %}
+            <div class="faq-item bg-white rounded-xl p-6 border border-gray-200 hover:border-[#7927F5]/30 hover:shadow-lg transition-all duration-300">
+                <details class="group cursor-pointer">
+                    <summary class="flex items-start justify-between font-semibold text-lg text-gray-900 hover:text-[#7927F5] transition-colors list-none">
+                        <span class="flex-1">{{ doc.qustion }}</span>
+                        <svg class="w-6 h-6 ml-3 transition-transform group-open:rotate-180 flex-shrink-0 text-[#7927F5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                        </svg>
+                    </summary>
+                    <p class="text-gray-600 leading-relaxed mt-4 ml-0">
+                        {{ doc.content }}
+                    </p>
+                </details>
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
+        {% else %}
+        <div class="text-center py-12">
+            <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <p class="text-gray-500 text-lg">暂无问题</p>
+        </div>
+        {% endif %}
     </div>
 
-    <!-- 底部提示 -->
-    <div class="mt-16 text-center">
-        <p class="text-gray-500 mb-4">还有更多问题？</p>
-        <a href="{% url 'joinus' %}" 
-           class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-[#7927F5] to-[#9C4FFF] text-white rounded-full hover:opacity-90 transition-opacity duration-300 font-medium">
-            <span class="mr-2">💬</span> 加入交流群，与开发者一起讨论
-        </a>
+    <!-- 底部 CTA 部分 -->
+    <div class="mt-16 pt-12 border-t border-gray-200">
+        <div class="max-w-3xl mx-auto bg-gradient-to-r from-[#7927F5]/10 to-[#9c60f8]/10 rounded-2xl border border-[#7927F5]/20 p-8 text-center">
+            <h2 class="text-2xl font-bold text-gray-900 mb-3">还有其他问题？</h2>
+            <p class="text-gray-600 mb-6">加入我们的交流群，与开发者和技术团队一起讨论</p>
+            <a href="{% url 'joinus' %}" 
+               class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-[#7927F5] to-[#9c60f8] text-white rounded-full hover:opacity-90 transition-opacity duration-300 font-semibold text-base shadow-lg hover:shadow-xl">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5z"/>
+                </svg>
+                加入交流群
+            </a>
+        </div>
     </div>
 </div>
 
 <style>
-    /* 自定义动画效果 */
+    /* FAQ 项动画效果 */
     .faq-item {
-        transition: all 0.3s ease;
+        animation: slideUp 0.3s ease;
     }
-    
-    .faq-item:hover {
-        border-color: #7927F5;
-        transform: translateY(-2px);
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
-    
+
     /* 响应式调整 */
     @media (max-width: 640px) {
         .faq-item {
             padding: 1rem;
         }
         
-        .faq-item h3 {
+        .faq-item summary {
             font-size: 1.125rem;
         }
+    }
+
+    /* 细节样式 */
+    details summary::-webkit-details-marker {
+        display: none;
     }
 </style>
 {% endblock %}
